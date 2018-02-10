@@ -26,6 +26,22 @@ public class HealthSystem : MonoBehaviour
 	{
 		return mShields;
 	}
+	public void DecreaseHealth(float value)
+	{
+		mHealth -= value;
+		if(mHealth < 0.0f)
+		{
+			Death();
+		}
+	}
+	public void DecreaseShields(float value)
+	{
+		mShields -= value;
+		if(mShields < 0.0f)
+		{
+			mShields = 0.0f;
+		}
+	}
 	public void IncreaseHealth(float value)
 	{
 		mHealth += value;
@@ -58,15 +74,42 @@ public class HealthSystem : MonoBehaviour
 	{
 		mShields = value;
 	}
-	public void TakeDamage(DamageType type, float damage)
+	public void TakeDamage(Damage damage)
 	{
 		mPlayerObject.SetNumTimesHit(mPlayerObject.GetNumTimesHit() + 1);
-		float finalDamage = damage;
+		float finalDamage = damage.GetAmount();
 
-		mHealth -= finalDamage;
-		if(mHealth <= 0.0f)
+		if(damage.GetDamageType() == Damage.Type.Magical)
 		{
-			Death();
+			finalDamage -= mPlayerObject.GetStats().GetWillpowerStat() * 0.1f;
+			if(finalDamage <= mShields)
+			{
+				DecreaseShields(finalDamage);
+			}
+			else
+			{
+				float remaining = Mathf.Abs(mShields - finalDamage);
+				DecreaseShields(finalDamage);
+				DecreaseHealth(remaining);
+			}
+		}
+		else if(damage.GetDamageType() == Damage.Type.Physical || damage.GetDamageType() == Damage.Type.Tech)
+		{
+			finalDamage -= mPlayerObject.GetStats().GetArmourStat() * 0.1f;
+			if(finalDamage <= mShields)
+			{
+				DecreaseShields(finalDamage);
+			}
+			else
+			{
+				float remaining = Mathf.Abs(mShields - finalDamage);
+				DecreaseShields(finalDamage);
+				DecreaseHealth(remaining);
+			}
+		}
+		else
+		{
+			Debug.LogError("[HealthSystem.cs] No damage type was assigned to this attack!");
 		}
 	}
 
@@ -112,7 +155,6 @@ public class HealthSystem : MonoBehaviour
 		mHealthRegenTimer = mPlayerObject.GetStats().GetHealthRegenRate();
 		mShieldRegenTimer = mPlayerObject.GetStats().GetShieldRegenRate();
 	}
-	
 	// Update is called once per frame
 	void Update ()
 	{
