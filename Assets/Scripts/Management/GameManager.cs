@@ -6,8 +6,14 @@ public class GameManager : MonoBehaviour
 {
 	public static GameManager instance {get; private set;}
 
+	[SerializeField]
+	private bool mDebugFlag;
 	private bool mPauseFlag;
 
+	public static bool DebugMode()
+	{
+		return instance.mDebugFlag;
+	}
 	public static bool GamePaused()
 	{
 		return instance.mPauseFlag;
