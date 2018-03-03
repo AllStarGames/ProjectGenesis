@@ -26,7 +26,7 @@ public class Weapon : Equipment
 	}
 	public enum Type
 	{
-		Meele = 1,
+		Melee = 1,
 		Ranged = 2,
 		NONE = 0
 	}
@@ -94,6 +94,18 @@ public class Weapon : Equipment
 	{
 		return mSecondaryClass;
 	}
+	public Damage CalculateDamage()
+	{
+			//Do a mode check
+		if(mIsSecondaryModeActive)
+		{
+			return mSecondaryDamage;
+		}
+		else
+		{
+			return mMainDamage;
+		}
+	}
 	public Damage GetMainDamage()
 	{
 		return mMainDamage;
@@ -101,22 +113,6 @@ public class Weapon : Equipment
 	public Damage GetSecondaryDamage()
 	{
 		return mSecondaryDamage;
-	}
-	public float CalculateDamage()
-	{
-		float totalDamage = 0.0f;
-
-			//Do a mode check
-		if(mIsSecondaryModeActive)
-		{
-			totalDamage = mSecondaryDamage.GetAmount();
-		}
-		else
-		{
-			totalDamage = mMainDamage.GetAmount();
-		}
-
-		return totalDamage;
 	}
 	public float CalculateSpeed()
 	{

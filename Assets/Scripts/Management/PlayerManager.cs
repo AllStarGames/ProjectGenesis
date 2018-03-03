@@ -12,6 +12,19 @@ public class PlayerManager : MonoBehaviour
 	{
 		return instance.mPlayerList;
 	}
+	public static Player GetLocalPlayer()
+	{
+		foreach (KeyValuePair<string, Player> player in instance.mPlayerList)
+		{
+			if(player.Value.gameObject.layer == LayerMask.NameToLayer("Local"))
+			{
+				return player.Value;
+			}
+		}
+
+		Debug.LogError("[PlayerManager.cs] No local player found! Make sure Player is being initialized correctly!");
+		return null;
+	}
 	public static void RegisterPlayer(string playerID, Player playerObject)
 	{
 		string ID = "PLYR" + playerID;

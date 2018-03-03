@@ -9,13 +9,16 @@ public class Player : MonoBehaviour
 	private Animator mAnimator;
 	[SerializeField]
 	private Behaviour[] mLocalComponents;
-	private bool mInCombatFlag;
+	private bool mIsInCombat;
+	private bool mIsLeftHanded;
 	private Camera mCamera;
 	private Controller mController;
 	private Collider mCollider;
+	private EnergySystem mEnergySystem;
 	[SerializeField]
 	private float mHeight;
 	private GameObject mFocus;
+	private Gear mGear;
 	private HealthSystem mHealthSystem;
 	private int mNumMagicalUses;
 	private int mNumPhysicalUses;
@@ -26,6 +29,8 @@ public class Player : MonoBehaviour
 	private Stats mStats;
 	[SerializeField]
 	private string mName;
+	private ThreatSystem mThreatSystem;
+	private Weapon[] mWeapons;
 	private WeaponSkills mWeaponSkills;
 	
 	//public override void OnStartClient()
@@ -43,9 +48,13 @@ public class Player : MonoBehaviour
 	{
 		return mLocalComponents;
 	}
-	public bool GetInCombatFlag()
+	public bool IsInCombat()
 	{
-		return mInCombatFlag;
+		return mIsInCombat;
+	}
+	public bool IsLeftHanded()
+	{
+		return mIsLeftHanded;
 	}
 	public Camera GetCamera()
 	{
@@ -59,6 +68,10 @@ public class Player : MonoBehaviour
 	{
 		return mCollider;
 	}
+	public EnergySystem GetEnergySystem()
+	{
+		return mEnergySystem;
+	}
 	public float GetHeight()
 	{
 		return mHeight;
@@ -66,6 +79,10 @@ public class Player : MonoBehaviour
 	public GameObject GetFocus()
 	{
 		return mFocus;
+	}
+	public Gear GetGear()
+	{
+		return mGear;
 	}
 	public HealthSystem GetHealthSystem()
 	{
@@ -107,6 +124,10 @@ public class Player : MonoBehaviour
 	{
 		return mName;
 	}
+	public ThreatSystem GetThreatSystem()
+	{
+		return mThreatSystem;
+	}
 	public Transform GetTransform()
 	{
 		return transform;
@@ -135,9 +156,17 @@ public class Player : MonoBehaviour
 	{
 		mCollider = collider;
 	}
+	public void SetEnergySystem(EnergySystem energySystem)
+	{
+		mEnergySystem = energySystem;
+	}
 	public void SetFocus(GameObject obj)
 	{
 		mFocus = obj;
+	}
+	public void SetGear(Gear gear)
+	{
+		mGear = gear;
 	}
 	public void SetHealthSystem(HealthSystem healthSystem)
 	{
@@ -147,9 +176,13 @@ public class Player : MonoBehaviour
 	{
 		mHeight = height;
 	}
-	public void SetInCombatFlag(bool flag)
+	public void SetIsInCombatFlag(bool flag)
 	{
-		mInCombatFlag = flag;
+		mIsInCombat = flag;
+	}
+	public void SetIsLeftHanded(bool flag)
+	{
+		mIsLeftHanded = flag;
 	}
 	public void SetMeshRenderer(SkinnedMeshRenderer meshRenderer)
 	{
@@ -187,9 +220,17 @@ public class Player : MonoBehaviour
 	{
 		mStats = stats;
 	}
+	public void SetThreatSystem(ThreatSystem threatSystem)
+	{
+		mThreatSystem = threatSystem;
+	}
 	public void SetWeaponSkills(WeaponSkills weaponSkills)
 	{
 		mWeaponSkills = weaponSkills;
+	}
+	public Weapon[] GetWeapons()
+	{
+		return mWeapons;
 	}
 	public WeaponSkills GetWeaponSkills()
 	{
@@ -210,6 +251,11 @@ public class Player : MonoBehaviour
 		{
 			Debug.LogError("[Player.cs] No Animator associated with " + name);
 		}
+		mBody = GetComponent<Rigidbody>();
+		if(!mBody)
+		{
+			Debug.LogError("[Player.cs] No Rigidbody associated with " + name);
+		}
 		mCamera = GetComponentInChildren<Camera>();
 		if(!mCamera)
 		{
@@ -224,6 +270,16 @@ public class Player : MonoBehaviour
 		if(!mCollider)
 		{
 			Debug.LogError("[Player.cs] No MeshCollider associated with " + name);
+		}
+		mEnergySystem = GetComponent<EnergySystem>();
+		if(!mEnergySystem)
+		{
+			Debug.LogError("[Player.cs No EnergySystem associated with " + name);
+		}
+		mGear = GetComponentInChildren<Gear>();
+		if(!mGear)
+		{
+			Debug.LogError("[Player.cs] No Gear associated with " + name);
 		}
 		mHealthSystem = GetComponent<HealthSystem>();
 		if(!mHealthSystem)
@@ -240,16 +296,17 @@ public class Player : MonoBehaviour
 		{
 			Debug.LogError("[Player.cs] No NavMeshAgent associated with " + name);
 		}
-		mBody = GetComponent<Rigidbody>();
-		if(!mBody)
-		{
-			Debug.LogError("[Player.cs] No Rigidbody associated with " + name);
-		}
 		mStats = GetComponent<Stats>();
 		if(!mStats)
 		{
 			Debug.LogError("[Player.cs] No Stats associated with " + name);
 		}
+		mThreatSystem = GetComponent<ThreatSystem>();
+		if(!mThreatSystem)
+		{
+			Debug.LogError("[Player.cs] No ThreatSystem associated with " + name);
+		}
+		mWeapons = new Weapon[2];
 		mWeaponSkills = GetComponent<WeaponSkills>();
 		if(!mWeaponSkills)
 		{
@@ -268,6 +325,9 @@ public class Player : MonoBehaviour
 		mStats.Initialize();
 		mWeaponSkills.Initialize();
 
+		//TEMP
+		PlayerManager.RegisterPlayer("1", this);
+
 		//if(!isLocalPlayer)
 		//{
 		//	AssignRemoteLayer();
@@ -277,5 +337,9 @@ public class Player : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
+		if(!GameManager.GamePaused())
+		{
+			mWeapons = GetComponentsInChildren<Weapon>();
+		}
 	}
 }

@@ -29,7 +29,12 @@ public class Equipment : MonoBehaviour
 
 	public virtual void Equip()
 	{
-
+		switch(mEquipmentType)
+		{
+			case Equipment.Type.NONE:
+				Debug.LogError("[Equipment.cs] Unable to equip " + gameObject.name + ". No equipment type");
+				break;
+		}
 	}
 	public virtual void Unequip()
 	{

@@ -172,7 +172,7 @@ public class CustomWeaponInspector : Editor
             mWeapon.SetNumAugmentSlots(EditorGUILayout.IntField(mWeapon.GetNumAugmentSlots()));
         GUILayout.EndHorizontal();
         GUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel("Numer of Enchments");
+            EditorGUILayout.PrefixLabel("Number of Enchments Allowed");
             mWeapon.SetNumEnchantmentSlots(EditorGUILayout.IntField(mWeapon.GetNumEnchantmentSlots()));
         GUILayout.EndHorizontal();
     }

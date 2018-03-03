@@ -102,8 +102,11 @@ public class Follow : MonoBehaviour
 	//Unity update method
 	void LateUpdate ()
 	{
-		transform.position = mPlayerObject.GetPosition() - mOffset * mZoomLevel;
-		transform.LookAt(mPlayerObject.GetPosition() + Vector3.up * mPlayerObject.GetHeight());
+		if(!GameManager.GamePaused())
+		{
+			transform.position = mPlayerObject.GetPosition() - mOffset * mZoomLevel;
+			transform.LookAt(mPlayerObject.GetPosition() + Vector3.up * mPlayerObject.GetHeight() * 0.5f);
+		}
 	}
 	//Unity initialization method
 	void Start()
@@ -119,8 +122,11 @@ public class Follow : MonoBehaviour
 	//Unity update method
 	void Update()
 	{
-		HandleInput();
-		Zoom();
+		if(!GameManager.GamePaused())
+		{
+			HandleInput();
+			Zoom();
+		}
 	}
 	void Zoom()
 	{

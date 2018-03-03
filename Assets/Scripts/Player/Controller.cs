@@ -6,18 +6,21 @@ using UnityEngine.AI;
 //The Controller will handle 4 main functions for players: attack, movement, interaction, and pick up
 public class Controller : MonoBehaviour
 {
-	public LayerMask mMovementMask;
+	[SerializeField]
+	private float mBaseSpeed = 5.0f;
+	[SerializeField]
+	private LayerMask mMovementMask;
 	private Player playerObject;
 
 	void Attack()
 	{
 		if(playerObject.GetFocus())
 		{
-			//playerObject.GetNavAgent().stoppingDistance = playerObject.GetFocus().transform.position - playerObject.GetWeapons().range;
+			//playerObject.GetNavAgent().stoppingDistance = playerObject.GetFocus().transform.position - playerObject.GetWeapons().;
 			//playerObject.GetNavAgent().SetDestination(playerObject.GetFocus().transform.position);
 			if(playerObject.GetNavAgent().isStopped)
 			{
-				//Attack!!!!
+				//Attack!!!
 			}
 		}
 	}
@@ -28,18 +31,21 @@ public class Controller : MonoBehaviour
 	//Method to handle the movement of this character
 	void Movement(Ray ray)
 	{
+		UpdateMoveSpeed();
 		if(Input.GetMouseButton(0))
 		{
-			RaycastHit hit;
-			if(Physics.Raycast(ray, out hit, 100.0f, mMovementMask))
+			if(playerObject.GetFocus())
 			{
-				//playerObject.GetAnimator().SetBool("moving", true);
-				playerObject.GetNavAgent().SetDestination(hit.point);
+				playerObject.GetNavAgent().SetDestination(playerObject.GetFocus().transform.position);
 			}
-			if(playerObject.GetPosition() == playerObject.GetNavAgent().destination)
+			else
 			{
-				playerObject.GetNavAgent().isStopped = true;
-				//playerObject.GetAnimator().SetBool("moving", false);
+				RaycastHit hit;
+				if(Physics.Raycast(ray, out hit, 100.0f, mMovementMask))
+				{
+					//playerObject.GetAnimator().SetBool("moving", true);
+					playerObject.GetNavAgent().SetDestination(hit.point);
+				}
 			}
 		}
 	}
@@ -55,21 +61,29 @@ public class Controller : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		Ray ray = playerObject.GetCamera().ScreenPointToRay(Input.mousePosition);
+		if(!GameManager.GamePaused())
+		{
+			Ray ray = playerObject.GetCamera().ScreenPointToRay(Input.mousePosition);
 		
-		UpdateAnimation();
-		Movement(ray);
+			UpdateAnimation();
+			Movement(ray);
+		}
 	}
 	void UpdateAnimation()
 	{
-		if(playerObject.GetNavAgent().isStopped)
-		{
-			playerObject.GetAnimator().SetBool("moving", false);
-			//Check if player is attacking or interacting
-		}
-		else
+		if(playerObject.GetNavAgent().velocity.magnitude > 0.0f)
 		{
 			playerObject.GetAnimator().SetBool("moving", true);
 		}
+		else
+		{
+			playerObject.GetAnimator().SetBool("moving", false);
+
+			//Check if player is attacking or interacting
+		}
+	}
+	void UpdateMoveSpeed()
+	{
+		playerObject.GetNavAgent().speed = mBaseSpeed + (playerObject.GetStats().GetAgilityStat() * 0.1f) - (playerObject.GetStats().GetCarryWeight() * 0.1f);
 	}
 }

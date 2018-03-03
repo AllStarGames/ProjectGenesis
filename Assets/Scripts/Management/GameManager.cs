@@ -22,6 +22,13 @@ public class GameManager : MonoBehaviour
 	{
 		instance.mPauseFlag = value;
 	}
+	public void QuitGame()
+	{
+#if UNITY_EDITOR
+		UnityEditor.EditorApplication.isPlaying = false;
+#endif
+		Application.Quit();
+	}
 
 	// Use this for initialization
 	void Awake ()
@@ -36,5 +43,13 @@ public class GameManager : MonoBehaviour
             DestroyImmediate(gameObject);
             return;
         }
+	}
+
+	void Update()
+	{
+		if(Input.GetKeyDown(KeyCode.Escape))
+		{
+			QuitGame();
+		}
 	}
 }

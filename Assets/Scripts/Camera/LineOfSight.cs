@@ -32,12 +32,15 @@ public class LineOfSight : MonoBehaviour
 
     void Update()
     {
-        CastRay();
-        FadeIn();
-        FadeOut();
+        if(!GameManager.GamePaused())
+        {
+            CastRay();
+            FadeIn();
+            FadeOut();
 
-        fadeInList.AddRange(fadeOutList.FindAll(obj => obj.material.color.a <= transparentLevel));
-        fadeOutList.RemoveAll(obj => obj.material.color.a <= transparentLevel);
+            fadeInList.AddRange(fadeOutList.FindAll(obj => obj.material.color.a <= transparentLevel));
+            fadeOutList.RemoveAll(obj => obj.material.color.a <= transparentLevel);
+        }
     }
 
     void CastRay()
