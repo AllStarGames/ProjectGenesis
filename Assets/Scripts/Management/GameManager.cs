@@ -8,8 +8,13 @@ public class GameManager : MonoBehaviour
 
 	[SerializeField]
 	private bool mDebugFlag;
+    private bool mEnableCombatText;
 	private bool mPauseFlag;
 
+    public static bool CombatTextEnabled()
+    {
+        return instance.mEnableCombatText;
+    }
 	public static bool DebugMode()
 	{
 		return instance.mDebugFlag;
@@ -18,6 +23,10 @@ public class GameManager : MonoBehaviour
 	{
 		return instance.mPauseFlag;
 	}
+    public static void EnableCombatText(bool value)
+    {
+        instance.mEnableCombatText = value;
+    }
 	public static void PauseGame(bool value)
 	{
 		instance.mPauseFlag = value;

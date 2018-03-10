@@ -43,7 +43,6 @@ public class Controller : MonoBehaviour
 				RaycastHit hit;
 				if(Physics.Raycast(ray, out hit, 100.0f, mMovementMask))
 				{
-					//playerObject.GetAnimator().SetBool("moving", true);
 					playerObject.GetNavAgent().SetDestination(hit.point);
 				}
 			}

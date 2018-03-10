@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
 	private Controller mController;
 	private Collider mCollider;
 	private EnergySystem mEnergySystem;
+    private float mCombatTimer;
 	[SerializeField]
 	private float mHeight;
 	private GameObject mFocus;
@@ -72,6 +73,10 @@ public class Player : MonoBehaviour
 	{
 		return mEnergySystem;
 	}
+    public float GetCombatTimer()
+    {
+        return mCombatTimer;
+    }
 	public float GetHeight()
 	{
 		return mHeight;
@@ -148,6 +153,10 @@ public class Player : MonoBehaviour
 	{
 		mCamera = camera;
 	}
+    public void SetCombatTimer(float time)
+    {
+        mCombatTimer = time;
+    }
 	public void SetController(Controller controller)
 	{
 		mController = controller;
@@ -325,6 +334,8 @@ public class Player : MonoBehaviour
 		mStats.Initialize();
 		mWeaponSkills.Initialize();
 
+        mCombatTimer = 15.0f;
+
 		//TEMP
 		PlayerManager.RegisterPlayer("1", this);
 
@@ -340,6 +351,16 @@ public class Player : MonoBehaviour
 		if(!GameManager.GamePaused())
 		{
 			mWeapons = GetComponentsInChildren<Weapon>();
-		}
+
+            //Run timers
+            if (mIsInCombat)
+            {
+                mCombatTimer -= Time.deltaTime;
+                if (mCombatTimer <= 0.0f)
+                {
+                    mIsInCombat = false;
+                }
+            }
+        }
 	}
 }

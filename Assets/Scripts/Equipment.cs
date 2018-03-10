@@ -24,10 +24,15 @@ public class Equipment : MonoBehaviour
 	private float mDurability;
 	[SerializeField]
 	private int mLevelRequirement = 1;
-	[SerializeField]
+    private int mNumAugmentSlots;
+    private int mNumEnchantmentSlots;
+    [SerializeField]
 	private Equipment.Type mEquipmentType = Equipment.Type.NONE;
 
-	public virtual void Equip()
+    protected NPC mNPCObject;
+    protected Player mPlayerObject;
+
+    public virtual void Equip()
 	{
 		switch(mEquipmentType)
 		{
@@ -53,7 +58,15 @@ public class Equipment : MonoBehaviour
 	{
 		return mLevelRequirement;
 	}
-	public Equipment.Type GetEquipmentType()
+    public int GetNumAugmentSlots()
+    {
+        return mNumAugmentSlots;
+    }
+    public int GetNumEnchantmentSlots()
+    {
+        return mNumEnchantmentSlots;
+    }
+    public Equipment.Type GetEquipmentType()
 	{
 		return mEquipmentType;
 	}
@@ -84,8 +97,16 @@ public class Equipment : MonoBehaviour
 	public void SetLevelRequirement(int level)
 	{
 		mLevelRequirement = level;
-	}
-	public void Strengthen(float value)
+    }
+    public void SetNumAugmentSlots(int value)
+    {
+        mNumAugmentSlots = value;
+    }
+    public void SetNumEnchantmentSlots(int value)
+    {
+        mNumEnchantmentSlots = value;
+    }
+    public void Strengthen(float value)
 	{
 		if(!mIsIndestructible)
 		{
@@ -108,6 +129,11 @@ public class Equipment : MonoBehaviour
 		}
 	}
 
+    void Awake()
+    {
+        mNPCObject = GetComponentInParent<NPC>();
+        mPlayerObject = GetComponentInParent<Player>();
+    }
 	void OnEnable()
 	{
 		mDurability = Random.Range(10.0f, 100.0f);

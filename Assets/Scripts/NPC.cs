@@ -19,8 +19,11 @@ public class NPC : MonoBehaviour
 	private EnergySystem mEnergySystem;
 	[SerializeField]
 	private float mCleanUpTimer = 30.0f;
+    private float mCombatTimer;
 	[SerializeField]
 	private float mHeight;
+    private float mMainAttackTimer;
+    private float mSecondaryAttackTimer;
 	private GameObject mTarget;
 	private HealthSystem mHealthSystem;
 	private MonoBehaviour mController;
@@ -33,6 +36,7 @@ public class NPC : MonoBehaviour
 	private ThreatSystem mThreatSystem;
 	[SerializeField]
 	private Weapon[] mWeapons;
+    private WeaponSkills mWeaponSkills;
 
 	public Animator GetAnimator()
 	{
@@ -66,10 +70,22 @@ public class NPC : MonoBehaviour
 	{
 		return mEnergySystem;
 	}
+    public float GetCombatTimer()
+    {
+        return mCombatTimer;
+    }
 	public float GetHeight()
 	{
 		return mHeight;
 	}
+    public float GetMainAttackTimer()
+    {
+        return mMainAttackTimer;
+    }
+    public float GetSecondaryAttackTimer()
+    {
+        return mSecondaryAttackTimer;
+    }
 	public GameObject GetTarget()
 	{
 		return mTarget;
@@ -150,6 +166,10 @@ public class NPC : MonoBehaviour
 	{
 		mCollider = collider;
 	}
+    public void SetCombatTimer(float time)
+    {
+        mCombatTimer = time;
+    }
 	public void SetController(Enemy controller)
 	{
 		mController = controller;
@@ -178,6 +198,10 @@ public class NPC : MonoBehaviour
 	{
 		mIsInCombat = value;
 	}
+    public void SetMainAttackTimer(float time)
+    {
+        mMainAttackTimer = time;
+    }
 	public void SetMeshRenderer(SkinnedMeshRenderer meshRenderer)
 	{
 		mMeshRenderer = meshRenderer;
@@ -198,6 +222,10 @@ public class NPC : MonoBehaviour
 	{
 		transform.position = position;
 	}
+    public void SetSecondaryAttackTimer(float time)
+    {
+        mSecondaryAttackTimer = time;
+    }
 	public void SetStats(Stats stats)
 	{
 		mStats = stats;
@@ -210,10 +238,18 @@ public class NPC : MonoBehaviour
 	{
 		mThreatSystem = threatSystem;
 	}
+    public void SetWeaponSkills(WeaponSkills weaponSkills)
+    {
+        mWeaponSkills = weaponSkills;
+    }
 	public Weapon[] GetWeapons()
 	{
 		return mWeapons;
 	}
+    public WeaponSkills GetWeaponSkills()
+    {
+        return mWeaponSkills;
+    }
 
 	//Unity initialization method
 	void Awake ()
@@ -272,6 +308,11 @@ public class NPC : MonoBehaviour
 		{
 			Debug.LogError("[NPC.cs] No ThreatSystem associated with " + name);
 		}
+        mWeaponSkills = GetComponent<WeaponSkills>();
+        if(!mWeaponSkills)
+        {
+            Debug.LogError("[NPC.cs] No WeaponSkills associated with " + name);
+        }
 	}
 	void OnMouseOff()
 	{
@@ -284,7 +325,6 @@ public class NPC : MonoBehaviour
 				PlayerManager.GetLocalPlayer().SetFocus(null);
 			}
 		}
-		
 	}
 	void OnMouseOver()
 	{
@@ -306,6 +346,18 @@ public class NPC : MonoBehaviour
 
 		//Initialize stats
 		mStats.Initialize();
+        mWeaponSkills.Initialize();
+
+        //Initialize timers
+        mCombatTimer = 15.0f;
+        if(mWeapons.Length > 0)
+        {
+            mMainAttackTimer = mWeapons[0].CalculateSpeed();
+            if(mWeapons.Length > 1)
+            {
+                mSecondaryAttackTimer = mWeapons[1].CalculateSpeed();
+            }
+        }
 	}
 	//Unity update method
 	void Update()
@@ -319,6 +371,19 @@ public class NPC : MonoBehaviour
 			else
 			{
 				OnMouseOff();
+
+                //Run timers
+                if(mIsInCombat)
+                {
+                    mCombatTimer -= Time.deltaTime;
+                    if(mCombatTimer <= 0.0f)
+                    {
+                        mIsInCombat = false;
+                    }
+                }
+
+                mMainAttackTimer -= Time.deltaTime;
+                mSecondaryAttackTimer -= Time.deltaTime;
 			}
 		}
 	}

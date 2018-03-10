@@ -239,8 +239,8 @@ public class HealthSystem : MonoBehaviour
 				mHealthRegenTimer -= Time.deltaTime;
 				if(mHealthRegenTimer <= 0.0f)
 				{
-					mHealthRegenTimer = mPlayerObject.GetStats().GetHealthRegenRate();
-					IncreaseHealth(1.0f);
+					IncreaseHealth(mPlayerObject.GetStats().GetHealthRegenRate());
+					mHealthRegenTimer = 1.0f;
 				}
 			}
 			else
@@ -250,8 +250,8 @@ public class HealthSystem : MonoBehaviour
 					mHealthRegenTimer -= Time.deltaTime;
 					if(mHealthRegenTimer <= 0.0f)
 					{
-						mHealthRegenTimer = mPlayerObject.GetStats().GetHealthRegenRate();
-						IncreaseHealth(1.0f);
+						IncreaseHealth(mPlayerObject.GetStats().GetHealthRegenRate());
+						mHealthRegenTimer = 1.0f;
 					}
 				}
 			}
@@ -263,8 +263,8 @@ public class HealthSystem : MonoBehaviour
 				mHealthRegenTimer -= Time.deltaTime;
 				if(mHealthRegenTimer <= 0.0f)
 				{
-					mHealthRegenTimer = mNPCObject.GetStats().GetHealthRegenRate();
-					IncreaseHealth(1.0f);
+					IncreaseHealth(mNPCObject.GetStats().GetHealthRegenRate());
+					mHealthRegenTimer = 1.0f;
 				}
 			}
 			else
@@ -274,9 +274,9 @@ public class HealthSystem : MonoBehaviour
 					mHealthRegenTimer -= Time.deltaTime;
 					if(mHealthRegenTimer <= 0.0f)
 					{
-						mHealthRegenTimer = mNPCObject.GetStats().GetHealthRegenRate();
-						IncreaseHealth(1.0f);
-					}
+                        IncreaseHealth(mNPCObject.GetStats().GetHealthRegenRate());
+                        mHealthRegenTimer = 1.0f;
+                    }
 				}
 			}
 		}
@@ -290,8 +290,8 @@ public class HealthSystem : MonoBehaviour
 				mShieldRegenTimer -= Time.deltaTime;
 				if(mShieldRegenTimer <= 0.0f)
 				{
-					mShieldRegenTimer = mPlayerObject.GetStats().GetShieldRegenRate();
-					IncreaseShields(1.0f);
+					IncreaseShields(mPlayerObject.GetStats().GetShieldRegenRate());
+					mShieldRegenTimer = 1.0f;
 				}
 			}
 		}
@@ -302,9 +302,9 @@ public class HealthSystem : MonoBehaviour
 				mShieldRegenTimer -= Time.deltaTime;
 				if(mShieldRegenTimer <= 0.0f)
 				{
-					mShieldRegenTimer = mNPCObject.GetStats().GetShieldRegenRate();
-					IncreaseShields(1.0f);
-				}
+                    IncreaseShields(mNPCObject.GetStats().GetShieldRegenRate());
+                    mShieldRegenTimer = 1.0f;
+                }
 			}
 		}
 	}
@@ -314,8 +314,12 @@ public class HealthSystem : MonoBehaviour
 		//Set flags
 		mIsDead = false;
 
-		//Reference the object script
-		mPlayerObject = GetComponent<Player>();
+        //Set regen timers
+        mHealthRegenTimer = 1.0f;
+        mShieldRegenTimer = 1.0f;
+
+        //Reference the object script
+        mPlayerObject = GetComponent<Player>();
 		mNPCObject = GetComponent<NPC>();
 
 		if(mPlayerObject)
@@ -324,10 +328,6 @@ public class HealthSystem : MonoBehaviour
 			//Set health and shield values
 			mHealth = mPlayerObject.GetStats().GetMaxHealth();
 			mShields = mPlayerObject.GetStats().GetMaxShields();
-
-			//Set regen timers
-			mHealthRegenTimer = mPlayerObject.GetStats().GetHealthRegenRate();
-			mShieldRegenTimer = mPlayerObject.GetStats().GetShieldRegenRate();
 		}
 		else if(mNPCObject)
 		{
@@ -335,10 +335,6 @@ public class HealthSystem : MonoBehaviour
 			//Set health and shield values
 			mHealth = mNPCObject.GetStats().GetMaxHealth();
 			mShields = mNPCObject.GetStats().GetMaxShields();
-
-			//Set regen timers
-			mHealthRegenTimer = mNPCObject.GetStats().GetHealthRegenRate();
-			mShieldRegenTimer = mNPCObject.GetStats().GetShieldRegenRate();
 		}
 		else
 		{

@@ -2,6 +2,7 @@
 using UnityEngine;
 
 [CustomEditor(typeof(Weapon))]
+[CanEditMultipleObjects]
 public class CustomWeaponInspector : Editor
 {
     private Weapon mWeapon;
@@ -9,12 +10,12 @@ public class CustomWeaponInspector : Editor
     public override void OnInspectorGUI()
     {
         SerializedObject serializedObject = new SerializedObject(target);
+        serializedObject.Update();
         
         SerializedProperty mainDamageProp = serializedObject.FindProperty("mMainDamage");
         GUIContent mainDamageLabel = new GUIContent();
         SerializedProperty secondaryDamageProp = serializedObject.FindProperty("mSecondaryDamage");
         GUIContent secondaryDamageLabel = new GUIContent();
-
 
         GUILayout.BeginHorizontal();
             EditorGUILayout.PrefixLabel("Slot");
@@ -34,6 +35,14 @@ public class CustomWeaponInspector : Editor
         GUILayout.BeginHorizontal();
              EditorGUILayout.PrefixLabel("Level Requirement");
              mWeapon.SetLevelRequirement(EditorGUILayout.IntField(mWeapon.GetLevelRequirement()));
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Number of Augment Slots");
+            mWeapon.SetNumAugmentSlots(EditorGUILayout.IntField(mWeapon.GetNumAugmentSlots()));
+        GUILayout.EndHorizontal();
+        GUILayout.BeginHorizontal();
+            EditorGUILayout.PrefixLabel("Number of Enchments Allowed");
+            mWeapon.SetNumEnchantmentSlots(EditorGUILayout.IntField(mWeapon.GetNumEnchantmentSlots()));
         GUILayout.EndHorizontal();
 
         GUILayout.Space(10.0f);
@@ -101,7 +110,7 @@ public class CustomWeaponInspector : Editor
 
             GUILayout.BeginHorizontal();
                 mainDamageLabel.text = "Primary Damage";
-                 EditorGUILayout.PropertyField(mainDamageProp, mainDamageLabel, true);
+                EditorGUILayout.PropertyField(mainDamageProp, mainDamageLabel, true);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
                 secondaryDamageLabel.text = "Secondary Damage";
@@ -167,14 +176,8 @@ public class CustomWeaponInspector : Editor
                 mWeapon.SetMainSpeed(EditorGUILayout.FloatField(mWeapon.GetMainSpeed()));
             GUILayout.EndHorizontal();
         }
-        GUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel("Number of Augment Slots");
-            mWeapon.SetNumAugmentSlots(EditorGUILayout.IntField(mWeapon.GetNumAugmentSlots()));
-        GUILayout.EndHorizontal();
-        GUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel("Number of Enchments Allowed");
-            mWeapon.SetNumEnchantmentSlots(EditorGUILayout.IntField(mWeapon.GetNumEnchantmentSlots()));
-        GUILayout.EndHorizontal();
+
+        serializedObject.ApplyModifiedProperties();
     }
 
     void OnEnable()
