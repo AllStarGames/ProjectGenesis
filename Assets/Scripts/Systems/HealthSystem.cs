@@ -219,6 +219,8 @@ public class HealthSystem : MonoBehaviour
 		if(mPlayerObject)
 		{
 			//This is a player
+			mPlayerObject.GetAnimator().SetBool("dead", true);
+			mPlayerObject.GetController().enabled = false;
 		}
 		else
 		{

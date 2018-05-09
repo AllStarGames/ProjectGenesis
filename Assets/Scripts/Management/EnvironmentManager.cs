@@ -227,7 +227,7 @@ public class EnvironmentManager : MonoBehaviour
 
         public void Create()
         {
-            emitter = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            emitter = Instantiate(prefab, new Vector3(0.0f, 20.0f, 0.0f), Quaternion.identity);
         }
         public void GetForNewTemperate(TemperateZone zone)
         {
@@ -575,15 +575,16 @@ public class EnvironmentManager : MonoBehaviour
         }
 
         //Set the debug flag
-        //debugMode = GameManager.instance.debugMode;
+       // debugMode = GameManager.DebugMode();
 
         //Set the current time of day to the scene's starting time
         time.SetCurrent(time.Starting());
 
         //Check if a sun already exsists in the scene
-        Light existingSun = GameObject.FindGameObjectWithTag("Sun").GetComponent<Light>();
-        if (existingSun)
+        if(GameObject.FindGameObjectWithTag("Sun"))
         {
+            Light existingSun = GameObject.FindGameObjectWithTag("Sun").GetComponent<Light>();
+
 #if UNITY_EDITOR
             if (debugMode)
             {
@@ -616,9 +617,10 @@ public class EnvironmentManager : MonoBehaviour
         sun.Intensity().AddKey(intensity);
 
         //Check if a moon already exsists in the scene
-        Light existingMoon = GameObject.FindGameObjectWithTag("Moon").GetComponent<Light>();
-        if (existingMoon)
+        if(GameObject.FindGameObjectWithTag("Moon"))
         {
+            Light existingMoon = GameObject.FindGameObjectWithTag("Moon").GetComponent<Light>();
+
 #if UNITY_EDITOR
             if (debugMode)
             {
@@ -643,16 +645,17 @@ public class EnvironmentManager : MonoBehaviour
         moon.Get().transform.eulerAngles = new Vector3(-sun.Get().transform.eulerAngles.x, moon.Get().transform.eulerAngles.y, moon.Get().transform.eulerAngles.z);
 
         //Check if a precipitation emitter already exsists in the scene
-        ParticleSystem existingEmitter = GameObject.FindGameObjectWithTag("Precipitation").GetComponent<ParticleSystem>();
-        if(existingEmitter)
+        if(GameObject.FindGameObjectWithTag("Precipitation"))
         {
+            ParticleSystem existingEmitter = GameObject.FindGameObjectWithTag("Precipitation").GetComponent<ParticleSystem>();
+
 #if UNITY_EDITOR
             if (debugMode)
             {
                 print("Found a precipitation emitter in the scene: " + existingEmitter.name + "!");
             }
-            precipitation.SetEmitter(existingEmitter);
 #endif
+            precipitation.SetEmitter(existingEmitter);
         }
         else
         {
@@ -671,11 +674,12 @@ public class EnvironmentManager : MonoBehaviour
         timer = precipitation.Cycle();
 
         //Check if the stars already exist in the scene
-        Transform existingStars = GameObject.FindGameObjectWithTag("Stars").GetComponent<Transform>();
-        if(existingStars)
+        if(GameObject.FindGameObjectWithTag("Stars"))
         {
+            Transform existingStars = GameObject.FindGameObjectWithTag("Stars").GetComponent<Transform>();
+
 #if UNITY_EDITOR
-            if(debugMode)
+            if (debugMode)
             {
                 print("Found stars in the scene: " + existingStars.name + "!");
             }

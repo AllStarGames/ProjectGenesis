@@ -323,6 +323,12 @@ public class NPC : MonoBehaviour
 				//Unhighlight this NPC and remove it as the player's focus
 				mIsHighlighted = false;
 				PlayerManager.GetLocalPlayer().SetFocus(null);
+
+				foreach(Material material in mMeshRenderer.materials)
+				{
+					material.shader = Shader.Find("Standard");
+				}
+				//mMeshRenderer.material.shader = Shader.Find("Diffuse");
 			}
 		}
 	}
@@ -335,6 +341,12 @@ public class NPC : MonoBehaviour
 				//Highlight this NPC and set it as the player's focus
 				mIsHighlighted = true;
 				PlayerManager.GetLocalPlayer().SetFocus(gameObject);
+
+				foreach(Material material in mMeshRenderer.materials)
+				{
+					material.shader = Shader.Find("Unlit/Outline_Diffuse");
+				}
+				//mMeshRenderer.material.shader = Shader.Find("Outline_Diffuse");
 			}
 		}
 	}
