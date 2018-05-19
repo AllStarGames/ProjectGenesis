@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
 
-public class NPC : NetworkBehaviour
+public class NPC : MonoBehaviour
 {
 	private Animator mAnimator;
 	[SerializeField]
@@ -25,7 +25,6 @@ public class NPC : NetworkBehaviour
     private float mMainAttackTimer;
     private float mSecondaryAttackTimer;
 	private GameObject mTarget;
-	private Gear mGear;
 	private HealthSystem mHealthSystem;
 	private MonoBehaviour mController;
 	private NavMeshAgent mNavAgent;
@@ -91,10 +90,6 @@ public class NPC : NetworkBehaviour
 	{
 		return mTarget;
 	}
-	public Gear GetGear()
-	{
-		return mGear;
-	}
 	public HealthSystem GetHealthSystem()
 	{
 		return mHealthSystem;
@@ -119,10 +114,10 @@ public class NPC : NetworkBehaviour
 	{
 		return mStats;
 	}
-	public string GetID()
-	{
-		return GetComponent<NetworkIdentity>().netId.ToString();
-	}
+	//public string GetID()
+	//{
+	//	return GetComponent<NetworkIdentity>().netId.ToString();
+	//}
 	public string GetName()
 	{
 		return mName;
@@ -182,10 +177,6 @@ public class NPC : NetworkBehaviour
 	public void SetEnergySystem(EnergySystem energySystem)
 	{
 		mEnergySystem = energySystem;
-	}
-	public void SetGear(Gear gear)
-	{
-		mGear = gear;
 	}
 	public void SetHasNightVisionFlag(bool value)
 	{
@@ -292,11 +283,6 @@ public class NPC : NetworkBehaviour
 		{
 			Debug.LogError("[NCP.cs] No EnergySystem associated with " + name);
 		}
-		mGear = GetComponentInChildren<Gear>();
-		if(!mGear)
-		{
-			Debug.LogError("[NPC.cs] No Gear associated with " + name);
-		}
 		mHealthSystem = GetComponent<HealthSystem>();
 		if(!mHealthSystem)
 		{
@@ -327,6 +313,42 @@ public class NPC : NetworkBehaviour
         {
             Debug.LogError("[NPC.cs] No WeaponSkills associated with " + name);
         }
+	}
+	void OnMouseOff()
+	{
+		if(mIsHighlighted)
+		{
+			if(!Input.GetMouseButton(0))
+			{
+				//Unhighlight this NPC and remove it as the player's focus
+				mIsHighlighted = false;
+				PlayerManager.GetLocalPlayer().SetFocus(null);
+
+				foreach(Material material in mMeshRenderer.materials)
+				{
+					material.shader = Shader.Find("Standard");
+				}
+				//mMeshRenderer.material.shader = Shader.Find("Diffuse");
+			}
+		}
+	}
+	void OnMouseOver()
+	{
+		if(!mHealthSystem.IsDead())
+		{
+			if(mCanBeFocused)
+			{
+				//Highlight this NPC and set it as the player's focus
+				mIsHighlighted = true;
+				PlayerManager.GetLocalPlayer().SetFocus(gameObject);
+
+				foreach(Material material in mMeshRenderer.materials)
+				{
+					material.shader = Shader.Find("Unlit/Outline_Diffuse");
+				}
+				//mMeshRenderer.material.shader = Shader.Find("Outline_Diffuse");
+			}
+		}
 	}
 	//Unity initialization method
 	void Start ()
@@ -360,7 +382,7 @@ public class NPC : NetworkBehaviour
 			}
 			else
 			{
-				//OnMouseOff();
+				OnMouseOff();
 
                 //Run timers
                 if(mIsInCombat)

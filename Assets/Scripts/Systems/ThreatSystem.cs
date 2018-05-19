@@ -70,10 +70,6 @@ public class ThreatSystem : MonoBehaviour
 					DecreaseThreat(1.0f);
 				}
 			}
-			else
-			{
-				mThreat = 0.0f;
-			}
 		}
 		else if(mNPCObject)
 		{
@@ -84,10 +80,6 @@ public class ThreatSystem : MonoBehaviour
 				{
 					DecreaseThreat(1.0f);
 				}
-			}
-			else
-			{
-				mThreat = 0.0f;
 			}
 		}
 	}

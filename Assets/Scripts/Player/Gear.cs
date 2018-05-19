@@ -113,12 +113,12 @@ public class Gear : MonoBehaviour
 		mLegGear.SetSlotType(Equipment.Type.Leg);
 		mRightHand.SetSlotType(Equipment.Type.Hand);
 		mShoulderGear.SetSlotType(Equipment.Type.Shoulder);
-		mWaistGear.SetSlotType(Equipment.Type.Waist);
-
-		//Set all the preset gear
-		foreach(Equipment equipment in GetComponentsInChildren<Equipment>())
-		{
-			equipment.Equip();
-		}
+		mWaistGear.SetSlotType(Equipment.Type.Waist);	
+	}
+	
+	// Update is called once per frame
+	void Update ()
+	{
+		
 	}
 }
