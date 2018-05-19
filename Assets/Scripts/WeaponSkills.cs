@@ -7,6 +7,7 @@ public class WeaponSkills : MonoBehaviour
 	private WeaponStats mAxeSkill;
 	private WeaponStats mBowSkill;
 	private WeaponStats mCannonSkill;
+	private WeaponStats mFistSkill;
 	private WeaponStats mKnifeSkill;
 	private WeaponStats mMaceSkill;
 	private WeaponStats mPistolSkill;
@@ -17,7 +18,6 @@ public class WeaponSkills : MonoBehaviour
 	private WeaponStats mTwoHandedAxeSkill;
 	private WeaponStats mTwoHandedMaceSkill;
 	private WeaponStats mTwoHandedSwordSkill;
-	private WeaponStats mUnarmedSkill;
 	private WeaponStats mWandSkill;
 
 	public WeaponStats GetAxeStats()
@@ -31,6 +31,10 @@ public class WeaponSkills : MonoBehaviour
 	public WeaponStats GetCannonStats()
 	{
 		return mCannonSkill;
+	}
+	public WeaponStats GetFistStats()
+	{
+		return mFistSkill;
 	}
 	public WeaponStats GetKnifeStats()
 	{
@@ -72,10 +76,6 @@ public class WeaponSkills : MonoBehaviour
 	{
 		return mTwoHandedSwordSkill;
 	}
-	public WeaponStats GetUnarmedStats()
-	{
-		return mUnarmedSkill;
-	}
 	public WeaponStats GetWandStats()
 	{
 		return mWandSkill;
@@ -90,6 +90,9 @@ public class WeaponSkills : MonoBehaviour
 		
 		mCannonSkill = new WeaponStats();
 		mCannonSkill.Initialize();
+
+		mFistSkill = new WeaponStats();
+		mFistSkill.Initialize();
 
 		mKnifeSkill = new WeaponStats();
 		mKnifeSkill.Initialize();
@@ -121,9 +124,6 @@ public class WeaponSkills : MonoBehaviour
 		mTwoHandedSwordSkill = new WeaponStats();
 		mTwoHandedSwordSkill.Initialize();
 
-		mUnarmedSkill = new WeaponStats();
-		mUnarmedSkill.Initialize();
-
 		mWandSkill = new WeaponStats();
 		mWandSkill.Initialize();
 	}
@@ -138,6 +138,10 @@ public class WeaponSkills : MonoBehaviour
 	public void SetCannonStats(WeaponStats cannonStats)
 	{
 		mCannonSkill = cannonStats;
+	}
+	public void SetFistStats(WeaponStats FistStats)
+	{
+		mFistSkill = FistStats;
 	}
 	public void SetKnifeStats(WeaponStats knifeStats)
 	{
@@ -178,10 +182,6 @@ public class WeaponSkills : MonoBehaviour
 	public void SetTwoHandedSwordStats(WeaponStats twoHandedSwordStats)
 	{
 		mTwoHandedSwordSkill = twoHandedSwordStats;
-	}
-	public void SetUnarmedStats(WeaponStats unarmedStats)
-	{
-		mUnarmedSkill = unarmedStats;
 	}
 	public void SetWandStats(WeaponStats wandStats)
 	{
