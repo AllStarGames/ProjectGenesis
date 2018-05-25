@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-<<<<<<< HEAD
-	private bool mIsHighlighted;
-=======
 	public enum Type
 	{
 		Enemy = 1,
@@ -187,7 +184,6 @@ public class Interactable : MonoBehaviour
 	{
 		mType = interactionType;
 	}
->>>>>>> parent of 5831b0d... Revert "Interaction added"
 
 	/// <summary>
 	/// Called every frame while the mouse is over the GUIElement or Collider.
@@ -241,11 +237,7 @@ public class Interactable : MonoBehaviour
 	// Use this for initialization
 	void Start ()
 	{
-<<<<<<< HEAD
 		mIsHighlighted = false;
-=======
-		mIsHighlighted = false;	
->>>>>>> parent of 5831b0d... Revert "Interaction added"
 	}
 	
 	// Update is called once per frame
