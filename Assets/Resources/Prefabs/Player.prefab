@@ -54,6 +54,7 @@ GameObject:
   - component: {fileID: 114103750686894932}
   - component: {fileID: 64728949894976068}
   - component: {fileID: 195660755296045190}
+  - component: {fileID: 114733890177186172}
   - component: {fileID: 114837373650463340}
   - component: {fileID: 54822755207421164}
   - component: {fileID: 114144093612079108}
@@ -1822,7 +1823,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1028676628491300}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -0.75}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4951970094966522}
@@ -3080,6 +3081,38 @@ MonoBehaviour:
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: ARE YOU SURE?
+--- !u!114 &114733890177186172
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1028676628491300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 372142912, guid: dc443db3e92b4983b9738c1131f555cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SceneId:
+    m_Value: 0
+  m_AssetId:
+    i0: 236
+    i1: 254
+    i2: 9
+    i3: 131
+    i4: 185
+    i5: 72
+    i6: 212
+    i7: 205
+    i8: 26
+    i9: 224
+    i10: 2
+    i11: 34
+    i12: 2
+    i13: 89
+    i14: 18
+    i15: 181
+  m_ServerOnly: 0
+  m_LocalPlayerAuthority: 1
 --- !u!114 &114739642780931220
 MonoBehaviour:
   m_ObjectHideFlags: 1

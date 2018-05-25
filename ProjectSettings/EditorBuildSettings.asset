@@ -6,5 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/DreamScene.unity
-    guid: 17de0e4d9cd174299a46ba251c67d2e3
+    path: Assets/Scenes/SkyLounge.unity
+    guid: 3947dcdcb533fd440a6b7ae7068a9039
+  m_configObjects: {}

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-	bool mIsHighlighted = false;
+	private bool mIsHighlighted;
 
 	/// <summary>
 	/// Called every frame while the mouse is over the GUIElement or Collider.
@@ -19,14 +19,14 @@ public class Interactable : MonoBehaviour
 		{
 			foreach(Material material in GetComponentInChildren<SkinnedMeshRenderer>().materials)
 			{
-				material.shader = Shader.Find("Unlit/Outline_Diffuse");
+				material.shader = Shader.Find("graphs/Outline")/*("Unlit/Outline_Diffuse")*/;
 			}
 		}
 		else if(GetComponent<MeshRenderer>())
 		{
 			foreach(Material material in GetComponent<MeshRenderer>().materials)
 			{
-				material.shader = Shader.Find("Unlit/Outline_Diffuse");
+				material.shader = Shader.Find("graphs/Outline")/*("Unlit/Outline_Diffuse")*/;
 			}
 		}
 	}
@@ -44,14 +44,14 @@ public class Interactable : MonoBehaviour
 			{
 				foreach(Material material in GetComponentInChildren<SkinnedMeshRenderer>().materials)
 				{
-					material.shader = Shader.Find("Standard");
+					material.shader = Shader.Find("LightweightPipeline/Standard (Physically Based)");
 				}
 			}
 			else if(GetComponent<MeshRenderer>())
 			{
 				foreach(Material material in GetComponent<MeshRenderer>().materials)
 				{
-					material.shader = Shader.Find("Standard");
+					material.shader = Shader.Find("LightweightPipeline/Standard (Physically Based)");
 				}
 			}
 		}
@@ -59,8 +59,9 @@ public class Interactable : MonoBehaviour
 
 
 	// Use this for initialization
-	void Start () {
-		
+	void Start ()
+	{
+		mIsHighlighted = false;
 	}
 	
 	// Update is called once per frame
