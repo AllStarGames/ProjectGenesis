@@ -51,7 +51,133 @@ public class Enemy : MonoBehaviour
                     mObject.GetTarget().GetComponent<Player>().SetCombatTimer(15.0f);
                 }
 
-                if(mObject.GetWeapons().Length > 0)
+                Weapon leftWeapon = new Weapon();
+                Weapon rightWeapon = new Weapon();
+                if(mObject.GetGear().GetLeftHandSlot().GetSlotEquipment().GetComponent<Weapon>())
+                {
+                    leftWeapon = mObject.GetGear().GetLeftHandSlot().GetSlotEquipment().GetComponent<Weapon>();
+                }
+                if(mObject.GetGear().GetRightHandSlot().GetSlotEquipment().GetComponent<Weapon>())
+                {
+                    rightWeapon = mObject.GetGear().GetRightHandSlot().GetSlotEquipment().GetComponent<Weapon>();
+                }
+
+                if(leftWeapon && leftWeapon.InRange(transform, mObject.GetTarget().transform))
+                {
+                    if(!mObject.GetNavMeshAgent().isStopped)
+					{
+						mObject.GetNavMeshAgent().nextPosition = mObject.GetPosition();
+						mObject.GetNavMeshAgent().isStopped = true;
+					}
+					else
+					{
+						mObject.GetAnimator().SetBool("attacking", true);
+						
+						Damage damage = leftWeapon.CalculateDamage();
+						if(leftWeapon.IsSecondaryModeActive())
+						{
+							if(damage.GetAmount() != 0.0f)
+							{
+								switch(leftWeapon.GetSecondaryDamage().GetDamageType())
+								{
+									case Damage.Type.Magical:
+										damage.SetAmount(damage.GetAmount() + mObject.GetStats().GetIntellectStat());
+										break;
+									case Damage.Type.Physical:
+										damage.SetAmount(damage.GetAmount() + mObject.GetStats().GetStrengthStat());
+										break;
+									case Damage.Type.NONE:
+										Debug.LogError("[Interactable.cs] " + leftWeapon.name + " has no secondary damage type! Please make sure it has been intialized correctly!");
+										break;
+								}
+							}
+						}
+						else
+						{
+							if(damage.GetAmount() != 0.0f)
+							{
+								switch(leftWeapon.GetMainDamage().GetDamageType())
+								{
+									case Damage.Type.Magical:
+										damage.SetAmount(damage.GetAmount() + mObject.GetStats().GetIntellectStat());
+										break;
+									case Damage.Type.Physical:
+										damage.SetAmount(damage.GetAmount() + mObject.GetStats().GetStrengthStat());
+										break;
+									case Damage.Type.NONE:
+										Debug.LogError("[Interactable.cs] " + leftWeapon.name + " has no primary damage type! Please make sure it has been intialized correctly!");
+										break;
+								}
+							}
+						}
+
+						GetComponent<HealthSystem>().TakeDamage(damage);
+						leftWeapon.GrantExperienceToClass(1);
+						if(!leftWeapon.GetIndestructibleFlag())
+						{
+							leftWeapon.Weaken(1.0f);
+						}
+					}
+                }
+                if(rightWeapon && rightWeapon.InRange(transform, mObject.GetTarget().transform))
+                {
+                    if(!mObject.GetNavMeshAgent().isStopped)
+					{
+						mObject.GetNavMeshAgent().nextPosition = mObject.GetPosition();
+						mObject.GetNavMeshAgent().isStopped = true;
+					}
+					else
+					{
+						mObject.GetAnimator().SetBool("attacking", true);
+						
+						Damage damage = rightWeapon.CalculateDamage();
+						if(rightWeapon.IsSecondaryModeActive())
+						{
+							if(damage.GetAmount() != 0.0f)
+							{
+								switch(rightWeapon.GetSecondaryDamage().GetDamageType())
+								{
+									case Damage.Type.Magical:
+										damage.SetAmount(damage.GetAmount() + mObject.GetStats().GetIntellectStat());
+										break;
+									case Damage.Type.Physical:
+										damage.SetAmount(damage.GetAmount() + mObject.GetStats().GetStrengthStat());
+										break;
+									case Damage.Type.NONE:
+										Debug.LogError("[Interactable.cs] " + rightWeapon.name + " has no secondary damage type! Please make sure it has been intialized correctly!");
+										break;
+								}
+							}
+						}
+						else
+						{
+							if(damage.GetAmount() != 0.0f)
+							{
+								switch(rightWeapon.GetMainDamage().GetDamageType())
+								{
+									case Damage.Type.Magical:
+										damage.SetAmount(damage.GetAmount() + mObject.GetStats().GetIntellectStat());
+										break;
+									case Damage.Type.Physical:
+										damage.SetAmount(damage.GetAmount() + mObject.GetStats().GetStrengthStat());
+										break;
+									case Damage.Type.NONE:
+										Debug.LogError("[Interactable.cs] " + rightWeapon.name + " has no primary damage type! Please make sure it has been intialized correctly!");
+										break;
+								}
+							}
+						}
+
+						GetComponent<HealthSystem>().TakeDamage(damage);
+						rightWeapon.GrantExperienceToClass(1);
+						if(!rightWeapon.GetIndestructibleFlag())
+						{
+							rightWeapon.Weaken(1.0f);
+						}
+					}
+                }
+
+                /*if(mObject.GetWeapons().Length > 0)
                 {
                     if (mObject.GetWeapons().Length > 1)
                     {
@@ -100,7 +226,7 @@ public class Enemy : MonoBehaviour
                 {
                     Debug.LogError("[Enemy.cs] " + name + " has no weapon to attack with!");
                     //mObject.GetNavMeshAgent().SetDestination(mObject.GetTarget().transform.position);
-                }
+                }*/
             }
             else
             {

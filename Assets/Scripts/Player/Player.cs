@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Networking;
 
-public class Player : MonoBehaviour
+public class Player : NetworkBehaviour
 {
 	private Animator mAnimator;
 	[SerializeField]
@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 	private int mNumMagicalUses;
 	private int mNumPhysicalUses;
 	private int mNumTimesHit;
+	private Light mFlashlight;
 	private NavMeshAgent mNavAgent;
 	private Rigidbody mBody;
 	private SkinnedMeshRenderer mMeshRenderer;
@@ -34,12 +35,12 @@ public class Player : MonoBehaviour
 	private Weapon[] mWeapons;
 	private WeaponSkills mWeaponSkills;
 	
-	//public override void OnStartClient()
-	//{
-	//	base.OnStartClient();
-	//
-	//	PlayerManager.RegisterPlayer(GetID(), this);
-	//}
+	public override void OnStartClient()
+	{
+		base.OnStartClient();
+	
+		PlayerManager.RegisterPlayer(GetID(), this);
+	}
 
 	public Animator GetAnimator()
 	{
@@ -105,6 +106,10 @@ public class Player : MonoBehaviour
 	{
 		return mNumTimesHit;
 	}
+	public Light GetFlashlight()
+	{
+		return mFlashlight;
+	}
 	public NavMeshAgent GetNavAgent()
 	{
 		return mNavAgent;
@@ -121,10 +126,10 @@ public class Player : MonoBehaviour
 	{
 		return mStats;
 	}
-	//public string GetID()
-	//{
-	//	return GetComponent<NetworkIdentity>().netId.ToString();
-	//}
+	public string GetID()
+	{
+		return GetComponent<NetworkIdentity>().netId.ToString();
+	}
 	public string GetName()
 	{
 		return mName;
@@ -168,6 +173,10 @@ public class Player : MonoBehaviour
 	public void SetEnergySystem(EnergySystem energySystem)
 	{
 		mEnergySystem = energySystem;
+	}
+	public void SetFlashlight(Light light)
+	{
+		mFlashlight = light;
 	}
 	public void SetFocus(GameObject obj)
 	{
@@ -239,7 +248,11 @@ public class Player : MonoBehaviour
 	}
 	public Weapon[] GetWeapons()
 	{
-		return mWeapons;
+		Weapon[] weapons = new Weapon[2];
+		weapons[0] = mGear.GetLeftHandSlot().GetSlotEquipment().GetComponent<Weapon>();
+		weapons[1] = mGear.GetRightHandSlot().GetSlotEquipment().GetComponent<Weapon>();
+
+		return weapons;		
 	}
 	public WeaponSkills GetWeaponSkills()
 	{
@@ -285,6 +298,11 @@ public class Player : MonoBehaviour
 		{
 			Debug.LogError("[Player.cs No EnergySystem associated with " + name);
 		}
+		mFlashlight = GetComponentInChildren<Light>();
+		if(!mFlashlight)
+		{
+			Debug.LogError("[Player.cs] No Light associated with " + name);
+		}
 		mGear = GetComponentInChildren<Gear>();
 		if(!mGear)
 		{
@@ -315,7 +333,6 @@ public class Player : MonoBehaviour
 		{
 			Debug.LogError("[Player.cs] No ThreatSystem associated with " + name);
 		}
-		mWeapons = new Weapon[2];
 		mWeaponSkills = GetComponent<WeaponSkills>();
 		if(!mWeaponSkills)
 		{
@@ -339,19 +356,17 @@ public class Player : MonoBehaviour
 		//TEMP
 		PlayerManager.RegisterPlayer("1", this);
 
-		//if(!isLocalPlayer)
-		//{
-		//	AssignRemoteLayer();
-		//	DisableLocalComponents();
-		//}
+		if(!isLocalPlayer)
+		{
+			AssignRemoteLayer();
+			DisableLocalComponents();
+		}
 	}
 	// Update is called once per frame
 	void Update ()
 	{
 		if(!GameManager.GamePaused())
 		{
-			mWeapons = GetComponentsInChildren<Weapon>();
-
             //Run timers
             if (mIsInCombat)
             {
@@ -361,6 +376,8 @@ public class Player : MonoBehaviour
                     mIsInCombat = false;
                 }
             }
+
+			Debug.Log(GetNavAgent().isStopped);
         }
 	}
 }

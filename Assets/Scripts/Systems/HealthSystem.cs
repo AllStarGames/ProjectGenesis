@@ -227,6 +227,17 @@ public class HealthSystem : MonoBehaviour
 			//This is either an enemy or NPC
 			if(mNPCObject)
 			{
+				if(mNPCObject.gameObject == PlayerManager.GetLocalPlayer().GetFocus())
+				{
+					if(PlayerManager.GetLocalPlayer().GetNavAgent().isStopped)
+					{
+						PlayerManager.GetLocalPlayer().GetNavAgent().isStopped = false;
+					}
+
+					PlayerManager.GetLocalPlayer().SetFocus(null);
+					mNPCObject.GetComponent<Interactable>().enabled = false;
+				}
+
 				mNPCObject.GetAnimator().SetBool("dead", true);
 				mNPCObject.CleanUp();
 			}
