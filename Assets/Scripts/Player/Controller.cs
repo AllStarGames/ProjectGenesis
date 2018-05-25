@@ -6,14 +6,28 @@ using UnityEngine.AI;
 //The Controller will handle 4 main functions for players: attack, movement, interaction, and pick up
 public class Controller : MonoBehaviour
 {
-	private float mFirstAttackTimer;
-	private float mSecondAttackTimer;
 	[SerializeField]
 	private float mBaseSpeed = 5.0f;
 	[SerializeField]
 	private LayerMask mMovementMask;
 	private Player playerObject;
 
+	void Attack()
+	{
+		if(playerObject.GetFocus())
+		{
+			//playerObject.GetNavAgent().stoppingDistance = playerObject.GetFocus().transform.position - playerObject.GetWeapons().;
+			//playerObject.GetNavAgent().SetDestination(playerObject.GetFocus().transform.position);
+			if(playerObject.GetNavAgent().isStopped)
+			{
+				//Attack!!!
+			}
+		}
+	}
+	void Interact()
+	{
+
+	}
 	//Method to handle the movement of this character
 	void Movement(Ray ray)
 	{
@@ -23,7 +37,6 @@ public class Controller : MonoBehaviour
 			if(playerObject.GetFocus())
 			{
 				playerObject.GetNavAgent().SetDestination(playerObject.GetFocus().transform.position);
-				playerObject.GetFocus().GetComponent<Interactable>().Interact();
 			}
 			else
 			{
@@ -43,13 +56,6 @@ public class Controller : MonoBehaviour
 		{
 			Debug.LogError("[Controller.cs] Can't find the Player!");
 		}
-
-		mFirstAttackTimer = 0.0f;
-		mSecondAttackTimer = 0.0f;
-	}
-	void ToggleLight()
-	{
-		playerObject.GetFlashlight().enabled = !playerObject.GetFlashlight().enabled;
 	}
 	// Update is called once per frame
 	void Update ()
@@ -60,11 +66,6 @@ public class Controller : MonoBehaviour
 		
 			UpdateAnimation();
 			Movement(ray);
-			
-			if(Input.GetKeyDown(KeyCode.F))
-			{
-				ToggleLight();
-			}
 		}
 	}
 	void UpdateAnimation()
@@ -76,11 +77,8 @@ public class Controller : MonoBehaviour
 		else
 		{
 			playerObject.GetAnimator().SetBool("moving", false);
-		}
 
-		if(!playerObject.GetFocus())
-		{
-			playerObject.GetAnimator().SetBool("attacking", false);
+			//Check if player is attacking or interacting
 		}
 	}
 	void UpdateMoveSpeed()
